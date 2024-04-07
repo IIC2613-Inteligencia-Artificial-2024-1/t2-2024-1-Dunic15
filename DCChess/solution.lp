@@ -53,10 +53,26 @@ pieceOn(X+1,Y-1,T+1) : exec(downright, T), able(X+1,Y-1)
 
 % Acciones del caballo.
 % [IMPLEMENTAR]
+knightAction(moveUpLeft).      % 2 arriba y 1 izquierda
+knightAction(moveUpRight).     % 2 arriba y 1 derecha
+knightAction(moveDownLeft).    % 2 abajo y 1 izquierda
+knightAction(moveDownRight).   % 2 abajo y 1 derecha
+knightAction(moveLeftUp).      % 1 izquierda y 2 arriba
+knightAction(moveLeftDown).    % 1 izquierda y 2 abajo
+knightAction(moveRightUp).     % 1 derecha y 2 arriba
+knightAction(moveRightDown).   % 1 derecha y 2 abajo
 
 % Movimientos caballo
 % [IMPLEMENTAR]
-
+1 {pieceOn(X-1,Y+2,T+1) : exec(moveUpLeft, T), able(X-1,Y+2);
+   pieceOn(X+1,Y+2,T+1) : exec(moveUpRight, T), able(X+1,Y+2);
+   pieceOn(X-1,Y-2,T+1) : exec(moveDownLeft, T), able(X-1,Y-2);
+   pieceOn(X+1,Y-2,T+1) : exec(moveDownRight, T), able(X+1,Y-2);
+   pieceOn(X-2,Y+1,T+1) : exec(moveLeftUp, T), able(X-2,Y+1);
+   pieceOn(X-2,Y-1,T+1) : exec(moveLeftDown, T), able(X-2,Y-1);
+   pieceOn(X+2,Y+1,T+1) : exec(moveRightUp, T), able(X+2,Y+1);
+   pieceOn(X+2,Y-1,T+1) : exec(moveRightDown, T), able(X+2,Y-1)
+} 1 :- piece(knight), pieceOn(X,Y,T), not done(T).
 % -------------------------------------------------------------------------------------------
 % ---------------------------------- PAWN'S BLOCKS (PEON) -----------------------------------
 % -------------------------------------------------------------------------------------------
