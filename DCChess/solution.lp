@@ -53,26 +53,28 @@ pieceOn(X+1,Y-1,T+1) : exec(downright, T), able(X+1,Y-1)
 
 % Acciones del caballo.
 % [IMPLEMENTAR]
-knightAction(moveUpLeft).      % 2 arriba y 1 izquierda
-knightAction(moveUpRight).     % 2 arriba y 1 derecha
-knightAction(moveDownLeft).    % 2 abajo y 1 izquierda
-knightAction(moveDownRight).   % 2 abajo y 1 derecha
-knightAction(moveLeftUp).      % 1 izquierda y 2 arriba
-knightAction(moveLeftDown).    % 1 izquierda y 2 abajo
-knightAction(moveRightUp).     % 1 derecha y 2 arriba
-knightAction(moveRightDown).   % 1 derecha y 2 abajo
+knightAction(twoupright).      % 2 arriba y 1 derecha
+knightAction(twoupleft).      % 2 arriba y 1 izquierda
+knightAction(twodownright).   % 2 abajo y 1 derecha
+knightAction(twodownleft).    % 2 abajo y 1 izquierda
+knightAction(uptworight).     % 1 arriba y 2 derecha
+knightAction(uptwoleft).      % 1 arriba y 2 izquierda
+knightAction(downtworight).   % 1 abajo y 2 derecha
+knightAction(downtwoleft).    % 1 abajo y 2 izquierda
 
 % Movimientos caballo
 % [IMPLEMENTAR]
-1 {pieceOn(X-1,Y+2,T+1) : exec(moveUpLeft, T), able(X-1,Y+2);
-   pieceOn(X+1,Y+2,T+1) : exec(moveUpRight, T), able(X+1,Y+2);
-   pieceOn(X-1,Y-2,T+1) : exec(moveDownLeft, T), able(X-1,Y-2);
-   pieceOn(X+1,Y-2,T+1) : exec(moveDownRight, T), able(X+1,Y-2);
-   pieceOn(X-2,Y+1,T+1) : exec(moveLeftUp, T), able(X-2,Y+1);
-   pieceOn(X-2,Y-1,T+1) : exec(moveLeftDown, T), able(X-2,Y-1);
-   pieceOn(X+2,Y+1,T+1) : exec(moveRightUp, T), able(X+2,Y+1);
-   pieceOn(X+2,Y-1,T+1) : exec(moveRightDown, T), able(X+2,Y-1)
+1 {pieceOn(X+1,Y+2,T+1) : exec(knightAction(twoupright), T), able(X+1,Y+2);
+   pieceOn(X+1,Y-2,T+1) : exec(knightAction(twodownright), T), able(X+1,Y-2);
+   pieceOn(X-1,Y+2,T+1) : exec(knightAction(twoupleft), T), able(X-1,Y+2);
+   pieceOn(X-1,Y-2,T+1) : exec(knightAction(twodownleft), T), able(X-1,Y-2);
+   pieceOn(X+2,Y+1,T+1) : exec(knightAction(uptworight), T), able(X+2,Y+1);
+   pieceOn(X+2,Y-1,T+1) : exec(knightAction(downtworight), T), able(X+2,Y-1);
+   pieceOn(X-2,Y+1,T+1) : exec(knightAction(uptwoleft), T), able(X-2,Y+1);
+   pieceOn(X-2,Y-1,T+1) : exec(knightAction(downtwoleft), T), able(X-2,Y-1)
 } 1 :- piece(knight), pieceOn(X,Y,T), not done(T).
+
+
 % -------------------------------------------------------------------------------------------
 % ---------------------------------- PAWN'S BLOCKS (PEON) -----------------------------------
 % -------------------------------------------------------------------------------------------
@@ -128,9 +130,35 @@ blocked(X,Y) :- attack_line(X,Y,I), not end_attack_line(X,Y,I).
 % --------------------------------- BISHOP'S BLOCKS (ALFIL) ---------------------------------
 % -------------------------------------------------------------------------------------------
 
-% Down left
+% Down left - abajo izquierda
 % [IMPLEMENTAR]
-% (...)
+bishop_attack_dl(X-D,Y-D,I) :- bishop(X,Y,I), D = 1..c, square(X-D,Y-D).
+attack_line(X,Y,I) :- bishop_attack_dl(X,Y,I).
+end_attack_line(X-D,Y-D,I) :- knight(X,Y), bishop_attack_dl(X,Y,I), square(X-D,Y-D), D = 1..c.
+end_attack_line(X-D,Y-D,I) :- pawn(X,Y), bishop_attack_dl(X,Y,I), square(X-D,Y-D), D = 1..c.
+end_attack_line(X-D,Y-D,I) :- bishop(X,Y,I2), bishop_attack_dl(X,Y,I), square(X-D,Y-D), D = 1..c.
+
+% Down Right - abajo derecha
+bishop_attack_dr(X+D,Y-D,I) :- bishop(X,Y,I), D = 1..c, square(X+D,Y-D).
+attack_line(X,Y,I) :- bishop_attack_dr(X,Y,I).
+end_attack_line(X+D,Y-D,I) :- knight(X,Y), bishop_attack_dr(X,Y,I), square(X+D,Y-D), D = 1..c.
+end_attack_line(X+D,Y-D,I) :- pawn(X,Y), bishop_attack_dr(X,Y,I), square(X+D,Y-D), D = 1..c.
+end_attack_line(X+D,Y-D,I) :- bishop(X,Y,I2), bishop_attack_dr(X,Y,I), square(X+D,Y-D), D = 1..c.
+
+% Up Left - arriba izquierda
+bishop_attack_ul(X-D,Y+D,I) :- bishop(X,Y,I), D = 1..c, square(X-D,Y+D).
+attack_line(X,Y,I) :- bishop_attack_ul(X,Y,I).
+end_attack_line(X-D,Y+D,I) :- knight(X,Y), bishop_attack_ul(X,Y,I), square(X-D,Y+D), D = 1..c.
+end_attack_line(X-D,Y+D,I) :- pawn(X,Y), bishop_attack_ul(X,Y,I), square(X-D,Y+D), D = 1..c.
+end_attack_line(X-D,Y+D,I) :- bishop(X,Y,I2), bishop_attack_ul(X,Y,I), square(X-D,Y+D), D = 1..c.
+
+% Up Right - arriba derecha
+bishop_attack_ur(X+D,Y+D,I) :- bishop(X,Y,I), D = 1..c, square(X+D,Y+D).
+attack_line(X,Y,I) :- bishop_attack_ur(X,Y,I).
+end_attack_line(X+D,Y+D,I) :- knight(X,Y), bishop_attack_ur(X,Y,I), square(X+D,Y+D), D = 1..c.
+end_attack_line(X+D,Y+D,I) :- pawn(X,Y), bishop_attack_ur(X,Y,I), square(X+D,Y+D), D = 1..c.
+end_attack_line(X+D,Y+D,I) :- bishop(X,Y,I2), bishop_attack_ur(X,Y,I), square(X+D,Y+D), D = 1..c.
+
 
 % -------------------------------------------------------------------------------------------
 % -------------------------------- KNIGHT'S BLOCKS (CABALLO) --------------------------------
@@ -138,7 +166,22 @@ blocked(X,Y) :- attack_line(X,Y,I), not end_attack_line(X,Y,I).
 
 % Down left
 % [IMPLEMENTAR]
-% (...)
+% 2 arriba y 1 derecha
+blocked(X+1,Y+2) :- knight(X,Y), square(X+1,Y+2).
+% 2 arriba and 1 izquierda
+blocked(X-1,Y+2) :- knight(X,Y), square(X-1,Y+2).
+% 2 abajo and 1 derecha
+blocked(X+1,Y-2) :- knight(X,Y), square(X+1,Y-2).
+% 2 abajo and 1 izquierda
+blocked(X-1,Y-2) :- knight(X,Y), square(X-1,Y-2).
+% 1 arriba and 2 derecha
+blocked(X+2,Y+1) :- knight(X,Y), square(X+2,Y+1).
+% 1 arriba and 2 izquierda
+blocked(X-2,Y+1) :- knight(X,Y), square(X-2,Y+1).
+% 1 abajo and 2 derecha
+blocked(X+2,Y-1) :- knight(X,Y), square(X+2,Y-1).
+% 1 abajo and 2 izquierda
+blocked(X-2,Y-1) :- knight(X,Y), square(X-2,Y-1).
 
 % -------------------------------------------------------------------------------------------
 % ----------------------------------- REGLAS GENERALES --------------------------------------
