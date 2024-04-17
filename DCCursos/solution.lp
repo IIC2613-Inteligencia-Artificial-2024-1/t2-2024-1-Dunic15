@@ -38,7 +38,10 @@ req2(C,IDX1):-req3(C,IDX1,IDX2),requisito(C,IDX1,_,_,_).
 req2(C,IDX1):-req3(C,IDX1,IDX2),correquisito(C,IDX1,_,_,_).
 
 % 2.3 Cumplir el subrequisito 1 de un curso
-1{req1(C):req2(C,_)}.
+req1(Curso) :-
+    req2(Curso, IDX1),
+    requisito(Curso, IDX1, _, _, _);
+    correquisito(Curso, IDX1, _, _, _).
 
 % 2.4 Si tiene requisitos, se necesita cumplir el subrequisito 1 de un curso para poder tomarlo
 :-requisito(C1,_,_,_,_),not req1(C1),tomar(C1,S),semestre(S).
